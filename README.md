@@ -1,16 +1,6 @@
 # 🍔 Hungrify
 
 <div align="center">
-# 🍔 Hungrify
-
-> A premium full-stack food delivery platform inspired by Swiggy & Zomato.
-
-![React](https://img.shields.io/badge/React-19-blue)
-![Node.js](https://img.shields.io/badge/Node.js-22-green)
-![Express](https://img.shields.io/badge/Express-black)
-![MySQL](https://img.shields.io/badge/MySQL-orange)
-![TypeScript](https://img.shields.io/badge/TypeScript-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
 
 # Crave. Click. Delivered.
 
