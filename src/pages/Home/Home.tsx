@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Restaurant } from '../../data/restaurants';
 import { MenuItem } from '../../data/menu';
-import { Coupon, coupons } from '../../data/coupons';
+import { coupons } from '../../data/coupons';
 import { restaurantsApi } from '../../services/api/restaurants';
 import { useAuth } from '../../contexts/AuthContext';
 import { useWishlist } from '../../contexts/WishlistContext';
@@ -16,17 +16,14 @@ export const Home: React.FC = () => {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [trendingFoods, setTrendingFoods] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // Local Carousel Slides
   const [activeOfferSlide, setActiveOfferSlide] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const allRest = await restaurantsApi.getAll();
-      setRestaurants(allRest.slice(0, 8)); // top 8 popular
+      setRestaurants(allRest.slice(0, 8));
 
-      // Pull sample trending foods from menu data
       const allMenu: MenuItem[] = [];
       for (const r of allRest.slice(0, 4)) {
         const menu = await restaurantsApi.getMenu(r.id);
@@ -51,57 +48,130 @@ export const Home: React.FC = () => {
   ];
 
   const testimonials = [
-    { name: 'Amit Roy', rating: 5, comment: 'Hungrify is extremely fast! The live rider map tracker updates smoothly.', avatar: '👨' },
-    { name: 'Sneha Rao', rating: 5, comment: 'Clean checkout layout and verified coupons work instantly.', avatar: '👩' },
-    { name: 'Vikram Singh', rating: 4, comment: 'The restaurant menu vege toggles make finding dishes so easy.', avatar: '👨' }
+    { name: 'Aarav Sharma', rating: '5.0', comment: 'The artisanal presentation and rapid delivery exceed every expectation.', role: 'Food Critic' },
+    { name: 'Sophia Chen', rating: '5.0', comment: 'Hungrify brings fine dining standard directly to our studio.', role: 'Architect' },
+    { name: 'Rohan Mehta', rating: '4.9', comment: 'Real-time rider map tracking with verified kitchen safety standards.', role: 'Design Director' }
   ];
-
-  const handleCollectionSelect = (colId: string) => {
-    navigate(`/restaurants?collection=${colId}`);
-  };
-
-  const handleCategorySelect = (catName: string) => {
-    navigate(`/restaurants?cuisine=${catName}`);
-  };
 
   return (
     <div style={styles.container}>
-      {/* Hero Section */}
-      <section style={styles.hero} className="glass-panel">
-        <h1 style={styles.heroTitle}>HUNGRIFY</h1>
-        <p style={styles.heroTagline}>Crave. Click. Delivered.</p>
-        <p style={styles.heroDesc}>
-          Order delicious meals from the finest verified kitchens, track delivery in real time, 
-          and experience seamless premium food delivery.
-        </p>
-        <div style={styles.heroActions}>
-          <button onClick={() => navigate('/restaurants')} style={styles.heroBtn1} className="glow-btn">
-            Order Now
-          </button>
-          <button onClick={() => navigate('/search')} style={styles.heroBtn2}>
-            Explore Restaurants
-          </button>
+      {/* Editorial Asymmetrical Hero Section */}
+      <section style={styles.heroSection}>
+        {/* Left Typography & Content */}
+        <div style={styles.heroLeft}>
+          <div style={styles.smallUpperLabel}>
+            <span style={styles.orangeDot} />
+            EXQUISITE CULINARY DIRECTORY
+          </div>
+          
+          <h1 style={styles.heroHeadline} className="font-serif">
+            Artisanal Meals, <br />
+            <span style={{ fontStyle: 'italic', color: 'var(--accent-orange)' }}>Effortlessly</span> Delivered.
+          </h1>
+
+          <p style={styles.heroSubtext}>
+            Order directly from award-winning kitchens and verified master chefs. Experience real-time order tracking with uncompromising culinary standards.
+          </p>
+
+          <div style={styles.heroCtaGroup}>
+            <button onClick={() => navigate('/restaurants')} className="pill-btn-primary">
+              EXPLORE KITCHENS <span>→</span>
+            </button>
+            <button onClick={() => navigate('/search')} className="pill-btn-outline">
+              SEARCH CUISINES
+            </button>
+          </div>
+
+          {/* Minimal Typography Statistics */}
+          <div style={styles.statsContainer}>
+            <div style={styles.statItem}>
+              <span style={styles.statNumber} className="font-display">250+</span>
+              <span style={styles.statLabel}>CURATED KITCHENS</span>
+            </div>
+            <div style={styles.statDivider} />
+            <div style={styles.statItem}>
+              <span style={styles.statNumber} className="font-display">18 MIN</span>
+              <span style={styles.statLabel}>AVG. DELIVERY</span>
+            </div>
+            <div style={styles.statDivider} />
+            <div style={styles.statItem}>
+              <span style={styles.statNumber} className="font-display">4.9★</span>
+              <span style={styles.statLabel}>USER RATING</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Floating 3D Imagery & Widgets */}
+        <div style={styles.heroRight}>
+          {/* Main 3D Floating Dish Image */}
+          <div style={styles.heroImageWrapper}>
+            <img 
+              src="/gourmet_dish_3d.png" 
+              alt="Artisanal Gourmet Salad Dish" 
+              style={styles.heroDishImg}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80';
+              }}
+            />
+
+            {/* Overlapping Floating Social Proof Widget */}
+            <div style={styles.floatingWidgetUser}>
+              <div style={styles.avatarGroup}>
+                <div style={{ ...styles.avatarCircle, backgroundColor: '#ffe5d9' }}>👨‍🍳</div>
+                <div style={{ ...styles.avatarCircle, backgroundColor: '#d8e5d7', marginLeft: '-12px' }}>👩‍💼</div>
+                <div style={{ ...styles.avatarCircle, backgroundColor: '#fff3b0', marginLeft: '-12px' }}>👨‍💻</div>
+              </div>
+              <div>
+                <div style={styles.widgetRatingText}>★ 4.9 (12k+ Reviews)</div>
+                <div style={styles.widgetSubText}>Top Michelin Partnered Kitchens</div>
+              </div>
+            </div>
+
+            {/* Overlapping Floating Delivery Badge Widget */}
+            <div style={styles.floatingWidgetBadge}>
+              <span style={{ fontSize: '1.4rem' }}>⚡</span>
+              <div>
+                <div style={styles.widgetTitle}>Live Express</div>
+                <div style={styles.widgetSubText}>Guaranteed Hot Delivery</div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Post-login special widgets */}
+      {/* Post-login Loyalty Banner */}
       {token && user && (
-        <section style={styles.dashboardWidget} className="glass-panel">
-          <h3>Welcome back, {user.name}!</h3>
-          <p>You have <strong>{user.loyaltyPoints || 0} Loyalty Points</strong> available. Apply them for discount redemptions.</p>
+        <section style={styles.welcomeBanner}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <span style={{ fontSize: '2rem' }}>💎</span>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-dark)' }}>Welcome back, {user.name}</h3>
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                You have <strong style={{ color: 'var(--accent-orange)' }}>{user.loyaltyPoints || 150} Loyalty Credits</strong> ready for checkout redemption.
+              </p>
+            </div>
+          </div>
+          <button onClick={() => navigate('/restaurants')} className="pill-btn-orange" style={{ padding: '10px 20px', fontSize: '0.85rem' }}>
+            Redeem Points
+          </button>
         </section>
       )}
 
-      {/* Cuisines Categories Carousel */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>What's on your mind?</h2>
+      {/* Cuisine Categories */}
+      <section style={styles.sectionMargin}>
+        <div style={styles.sectionHeaderRow}>
+          <div>
+            <span style={styles.smallUpperLabel}>CUISINE SELECTION</span>
+            <h2 style={styles.sectionTitle} className="font-serif">What's on your mind?</h2>
+          </div>
+        </div>
+
         <div style={styles.categoriesRow}>
           {categories.map((cat, idx) => (
             <div 
               key={idx} 
               style={styles.catCard} 
-              className="glass-panel"
-              onClick={() => handleCategorySelect(cat.name)}
+              onClick={() => navigate(`/restaurants?cuisine=${cat.name}`)}
             >
               <span style={styles.catIcon}>{cat.icon}</span>
               <span style={styles.catName}>{cat.name}</span>
@@ -110,33 +180,51 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Collections Grid */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Explore Collections</h2>
+      {/* Collections Section */}
+      <section style={styles.sectionMargin}>
+        <div style={styles.sectionHeaderRow}>
+          <div>
+            <span style={styles.smallUpperLabel}>CURATED GUIDES</span>
+            <h2 style={styles.sectionTitle} className="font-serif">Featured Collections</h2>
+          </div>
+        </div>
+
         <div style={styles.collectionsGrid}>
           {COLLECTIONS.map(col => (
             <div 
               key={col.id} 
-              style={styles.colCard} 
-              className="glass-panel"
-              onClick={() => handleCollectionSelect(col.id)}
+              style={styles.colCard}
+              onClick={() => navigate(`/restaurants?collection=${col.id}`)}
             >
-              <h3>{col.name}</h3>
-              <p>{col.description}</p>
+              <div style={styles.colHeader}>
+                <span style={styles.colBadge}>COLLECTION</span>
+                <span style={{ color: 'var(--accent-orange)' }}>→</span>
+              </div>
+              <h3 style={styles.colTitle} className="font-serif">{col.name}</h3>
+              <p style={styles.colDesc}>{col.description}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Popular Restaurants */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Popular Restaurants</h2>
+      <section style={styles.sectionMargin}>
+        <div style={styles.sectionHeaderRow}>
+          <div>
+            <span style={styles.smallUpperLabel}>VERIFIED KITCHENS</span>
+            <h2 style={styles.sectionTitle} className="font-serif">Popular Restaurants</h2>
+          </div>
+          <button onClick={() => navigate('/restaurants')} className="pill-btn-outline" style={{ padding: '8px 20px', fontSize: '0.8rem' }}>
+            VIEW ALL
+          </button>
+        </div>
+
         {loading ? (
-          <p>Loading kitchens...</p>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>Loading culinary directory...</div>
         ) : (
           <div style={styles.restaurantsGrid}>
             {restaurants.map(rest => (
-              <div key={rest.id} style={styles.restCard} className="glass-panel">
+              <div key={rest.id} style={styles.restCard}>
                 <div 
                   style={styles.cardImageWrapper}
                   onClick={() => navigate(`/restaurants/${rest.id}`)}
@@ -150,39 +238,35 @@ export const Home: React.FC = () => {
                     }}
                   />
                   <div style={styles.cuisineBadge}>{rest.cuisineType}</div>
-                  <span style={styles.logoBadge}>{rest.logo}</span>
-                  {rest.offerBadge && <div style={styles.offerTag}>{rest.offerBadge}</div>}
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); toggleFavoriteRestaurant(rest.id); }}
+                    style={styles.favBtn}
+                  >
+                    {isRestaurantFavorite(rest.id) ? '❤️' : '🤍'}
+                  </button>
                 </div>
                 
                 <div style={styles.cardContent}>
-                  <div style={styles.cardTitleRow}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <h3 
                       style={styles.restName}
+                      className="font-serif"
                       onClick={() => navigate(`/restaurants/${rest.id}`)}
                     >
                       {rest.name}
                     </h3>
-                    <button 
-                      onClick={() => toggleFavoriteRestaurant(rest.id)}
-                      style={styles.favBtn}
-                    >
-                      {isRestaurantFavorite(rest.id) ? '❤️' : '🤍'}
-                    </button>
+                    <span style={styles.ratingBadge}>★ {rest.rating}</span>
                   </div>
                   
-                  <div style={styles.restMeta}>
-                    <span style={styles.rating}>★ {rest.rating}</span>
-                    <span>•</span>
-                    <span>{rest.deliveryTime} mins</span>
-                    <span>•</span>
-                    <span>{rest.distance} km</span>
-                  </div>
+                  <p style={styles.restMetaText}>
+                    {rest.deliveryTime} mins • {rest.distance} km • ₹{rest.costForTwo} for two
+                  </p>
                   
-                  <div style={styles.cardFooter}>
-                    <span>₹{rest.costForTwo} for two</span>
-                    <span style={{ color: rest.isOpen ? 'var(--success)' : 'var(--danger)', fontWeight: 600 }}>
-                      {rest.isOpen ? 'Open' : 'Closed'}
+                  <div style={styles.cardFooterRow}>
+                    <span style={styles.openTag}>
+                      {rest.isOpen ? '🟢 Open Now' : '🔴 Closed'}
                     </span>
+                    {rest.offerBadge && <span style={styles.offerBadgeTag}>{rest.offerBadge}</span>}
                   </div>
                 </div>
               </div>
@@ -191,109 +275,93 @@ export const Home: React.FC = () => {
         )}
       </section>
 
-      {/* Offers Slider Carousel */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Offers & Discount Coupons</h2>
-        <div style={styles.offerSlideWrapper} className="glass-panel">
-          <div style={styles.offerSlideContent}>
-            <span style={styles.offerBadge}>🎟️ {coupons[activeOfferSlide].code}</span>
-            <h3>{coupons[activeOfferSlide].description}</h3>
-            <p>Minimum Order: ₹{coupons[activeOfferSlide].minOrderAmount}</p>
-          </div>
-          <div style={styles.carouselIndicators}>
+      {/* Prominent Coupons Banner */}
+      <section style={styles.couponBanner}>
+        <div style={styles.couponLeft}>
+          <span style={styles.smallUpperLabel} className="color-orange">EXCLUSIVE PROMOTIONS</span>
+          <h2 style={styles.couponTitle} className="font-serif">
+            {coupons[activeOfferSlide].code}
+          </h2>
+          <p style={styles.couponDesc}>{coupons[activeOfferSlide].description}</p>
+          <span style={styles.couponMin}>Min. order ₹{coupons[activeOfferSlide].minOrderAmount}</span>
+        </div>
+
+        <div style={styles.couponRight}>
+          <button 
+            onClick={() => setActiveOfferSlide((prev) => (prev + 1) % coupons.length)} 
+            className="pill-btn-orange"
+          >
+            CLAIM PROMO CODE
+          </button>
+          <div style={styles.indicatorGroup}>
             {coupons.slice(0, 4).map((_, idx) => (
-              <button 
-                key={idx} 
+              <span 
+                key={idx}
                 onClick={() => setActiveOfferSlide(idx)}
-                style={activeOfferSlide === idx ? styles.indicatorActive : styles.indicator}
+                style={{
+                  ...styles.dotIndicator,
+                  backgroundColor: activeOfferSlide === idx ? 'var(--accent-orange)' : 'rgba(0,0,0,0.15)',
+                  width: activeOfferSlide === idx ? '24px' : '8px'
+                }}
               />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Trending Foods List */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Trending Dishes Near You</h2>
+      {/* Trending Dishes Section */}
+      <section style={styles.sectionMargin}>
+        <div style={styles.sectionHeaderRow}>
+          <div>
+            <span style={styles.smallUpperLabel}>CHEF RECOMMENDATIONS</span>
+            <h2 style={styles.sectionTitle} className="font-serif">Trending Culinary Creations</h2>
+          </div>
+        </div>
+
         <div style={styles.trendingGrid}>
           {trendingFoods.map(food => (
             <div 
               key={food.id} 
-              style={styles.trendCard} 
-              className="glass-panel"
+              style={styles.trendCard}
               onClick={() => navigate(`/restaurants/${food.restaurantId}`)}
             >
-              <div style={styles.trendMeta}>
-                <span style={{ color: food.isVeg ? '#10B981' : '#EF4444', fontSize: '12px' }}>
-                  {food.isVeg ? '🟢 Veg' : '🔴 Non-Veg'}
+              <div>
+                <span style={{ fontSize: '0.7rem', fontWeight: 700, color: food.isVeg ? '#10B981' : '#EF4444' }}>
+                  {food.isVeg ? '🟢 VEGETARIAN' : '🔴 NON-VEG'}
                 </span>
-                <h4>{food.name}</h4>
+                <h4 style={styles.trendFoodTitle} className="font-serif">{food.name}</h4>
                 <p style={styles.trendPrice}>₹{food.price}</p>
               </div>
-              <button style={styles.trendOrderBtn} className="glow-btn">Order</button>
+              <button className="pill-btn-primary" style={{ padding: '8px 16px', fontSize: '0.8rem' }}>
+                ADD
+              </button>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Why Choose Hungrify */}
-      <section style={styles.section} className="glass-panel">
-        <h2 style={{ ...styles.sectionTitle, textAlign: 'center' }}>Why You'll Love Hungrify ⭐</h2>
-        <div style={styles.whyGrid}>
-          <div style={styles.whyCard}>
-            <span style={styles.whyIcon}>🚀</span>
-            <h3>Superfast Delivery</h3>
-            <p>Simulate delivery agent routes and watch order arrivals in minutes.</p>
-          </div>
-          <div style={styles.whyCard}>
-            <span style={styles.whyIcon}>🍲</span>
-            <h3>Curated Premium Menus</h3>
-            <p>Access 150+ food items from 30+ highly-rated local restaurants.</p>
-          </div>
-          <div style={styles.whyCard}>
-            <span style={styles.whyIcon}>🔐</span>
-            <h3>Secure Mock Payments</h3>
-            <p>Checkout securely using UPI, Credit Cards, or Wallet balances.</p>
-          </div>
-          <div style={styles.whyCard}>
-            <span style={styles.whyIcon}>🤖</span>
-            <h3>Interactive DBMS Sandbox</h3>
-            <p>Explore normalization engines, SQL editors, and visual ER diagrams inside.</p>
+      {/* Floating 2nd Banner / Download Mobile Experience */}
+      <section style={styles.appBanner}>
+        <div style={styles.appBannerLeft}>
+          <span style={styles.smallUpperLabel}>MOBILE EXPERIENCE</span>
+          <h2 style={styles.appBannerTitle} className="font-serif">Hungrify Anywhere.</h2>
+          <p style={styles.appBannerSub}>
+            Download our native iOS and Android application to unlock live rider tracking, customized chef requests, and instant notifications.
+          </p>
+          <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+            <button className="pill-btn-primary">App Store</button>
+            <button className="pill-btn-outline">Google Play</button>
           </div>
         </div>
-      </section>
-
-      {/* Customer Reviews testimonials */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>What Food Lovers Say</h2>
-        <div style={styles.testimonialsGrid}>
-          {testimonials.map((test, idx) => (
-            <div key={idx} style={styles.testCard} className="glass-panel">
-              <div style={styles.testHeader}>
-                <span style={styles.testAvatar}>{test.avatar}</span>
-                <div>
-                  <h4>{test.name}</h4>
-                  <span style={styles.ratingStars}>{'★'.repeat(test.rating)}</span>
-                </div>
-              </div>
-              <p style={styles.testComment}>"{test.comment}"</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Download app banner */}
-      <section style={styles.downloadBanner} className="glass-panel">
-        <div style={styles.downloadLeft}>
-          <h2>Hungrify in your pocket</h2>
-          <p>Download our simulated mobile app to place orders and track delivery on the go.</p>
-          <div style={styles.downloadApps}>
-            <button onClick={() => alert('App Store integration coming soon')} style={styles.downloadBtn}> App Store</button>
-            <button onClick={() => alert('Play Store integration coming soon')} style={styles.downloadBtn}>▶ Google Play</button>
-          </div>
-        </div>
-        <div style={styles.downloadRight}>
-          <span style={styles.phoneMock}>📱</span>
+        <div style={styles.appBannerRight}>
+          <img 
+            src="/gourmet_burger_3d.png" 
+            alt="3D Floating Burger"
+            style={styles.burgerImg} 
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80';
+            }}
+          />
         </div>
       </section>
     </div>
@@ -302,379 +370,446 @@ export const Home: React.FC = () => {
 
 const styles = {
   container: {
-    padding: '10px 0',
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: '50px'
+    gap: '60px',
   },
-  hero: {
-    padding: '80px 40px',
-    textAlign: 'center' as const,
-    display: 'flex',
-    flexDirection: 'column' as const,
+  heroSection: {
+    display: 'grid',
+    gridTemplateColumns: '1.1fr 0.9fr',
+    gap: '40px',
     alignItems: 'center',
-    gap: '20px',
-    background: 'radial-gradient(circle, rgba(124,58,237,0.1) 0%, rgba(5,8,22,0.1) 100%)',
-    border: '1px solid var(--card-border)'
+    minHeight: '540px',
+    paddingTop: '20px',
   },
-  heroTitle: {
-    fontSize: '54px',
-    fontWeight: 800,
-    letterSpacing: '4px',
-    color: 'var(--text-primary)',
-    background: 'linear-gradient(to right, #7C3AED, #22D3EE)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent'
-  },
-  heroTagline: {
-    fontSize: '22px',
-    fontWeight: 700,
-    color: 'var(--secondary)',
-    letterSpacing: '1px'
-  },
-  heroDesc: {
-    fontSize: '16px',
-    color: 'var(--text-secondary)',
-    lineHeight: '1.6',
-    maxWidth: '700px'
-  },
-  heroActions: {
+  heroLeft: {
     display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '24px',
+  },
+  smallUpperLabel: {
+    fontSize: '0.7rem',
+    letterSpacing: '0.2em',
+    fontWeight: 700,
+    color: 'var(--text-muted)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  orangeDot: {
+    width: '6px',
+    height: '6px',
+    borderRadius: '50%',
+    backgroundColor: 'var(--accent-orange)',
+    display: 'inline-block',
+  },
+  heroHeadline: {
+    fontSize: '3.6rem',
+    lineHeight: '1.1',
+    fontWeight: 700,
+    color: 'var(--text-dark)',
+    letterSpacing: '-0.02em',
+  },
+  heroSubtext: {
+    fontSize: '1rem',
+    color: 'var(--text-muted)',
+    lineHeight: '1.6',
+    maxWidth: '480px',
+  },
+  heroCtaGroup: {
+    display: 'flex',
+    alignItems: 'center',
     gap: '16px',
-    marginTop: '10px'
+    marginTop: '8px',
   },
-  heroBtn1: {
-    padding: '12px 30px',
-    fontSize: '16px'
+  statsContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '32px',
+    marginTop: '28px',
+    paddingTop: '28px',
+    borderTop: '1px solid var(--border-subtle)',
   },
-  heroBtn2: {
-    padding: '12px 30px',
-    fontSize: '16px',
-    borderRadius: '8px',
-    backgroundColor: 'transparent',
-    border: '1px solid var(--card-border)',
-    color: 'var(--text-secondary)',
-    cursor: 'pointer',
+  statItem: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '4px',
+  },
+  statNumber: {
+    fontSize: '1.6rem',
+    fontWeight: 800,
+    color: 'var(--text-dark)',
+  },
+  statLabel: {
+    fontSize: '0.65rem',
+    letterSpacing: '0.12em',
     fontWeight: 600,
-    transition: 'all 0.2s ease'
+    color: 'var(--text-muted)',
   },
-  dashboardWidget: {
-    padding: '20px 30px',
-    backgroundColor: 'rgba(16, 185, 129, 0.04)',
-    border: '1px solid rgba(16, 185, 129, 0.2)',
+  statDivider: {
+    width: '1px',
+    height: '32px',
+    backgroundColor: 'var(--border-subtle)',
+  },
+  heroRight: {
+    position: 'relative' as const,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  heroImageWrapper: {
+    position: 'relative' as const,
+    width: '100%',
+    maxWidth: '460px',
+  },
+  heroDishImg: {
+    width: '100%',
+    height: 'auto',
+    objectFit: 'contain' as const,
+    filter: 'drop-shadow(0 25px 35px rgba(25, 45, 28, 0.18))',
+    transform: 'scale(1.05)',
+  },
+  floatingWidgetUser: {
+    position: 'absolute' as const,
+    top: '10%',
+    left: '-20px',
+    backgroundColor: '#ffffff',
+    padding: '12px 18px',
+    borderRadius: '999px',
+    boxShadow: 'var(--shadow-card)',
+    border: '1px solid var(--border-subtle)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+  },
+  avatarGroup: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  avatarCircle: {
+    width: '32px',
+    height: '32px',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '0.85rem',
+    border: '2px solid #ffffff',
+  },
+  widgetRatingText: {
+    fontSize: '0.8rem',
+    fontWeight: 700,
+    color: 'var(--text-dark)',
+  },
+  widgetSubText: {
+    fontSize: '0.68rem',
+    color: 'var(--text-muted)',
+  },
+  floatingWidgetBadge: {
+    position: 'absolute' as const,
+    bottom: '10%',
+    right: '-10px',
+    backgroundColor: '#ffffff',
+    padding: '12px 20px',
+    borderRadius: '20px',
+    boxShadow: 'var(--shadow-card)',
+    border: '1px solid var(--border-subtle)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+  },
+  widgetTitle: {
+    fontSize: '0.85rem',
+    fontWeight: 700,
+    color: 'var(--text-dark)',
+  },
+  welcomeBanner: {
+    backgroundColor: '#ffffff',
+    padding: '24px 36px',
+    borderRadius: '24px',
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    boxShadow: 'var(--shadow-card)',
+    border: '1px solid var(--border-subtle)',
   },
-  section: {
+  sectionMargin: {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: '24px'
+    gap: '24px',
+  },
+  sectionHeaderRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
   },
   sectionTitle: {
-    fontSize: '24px',
+    fontSize: '2rem',
     fontWeight: 700,
-    color: 'var(--text-primary)'
+    color: 'var(--text-dark)',
+    marginTop: '4px',
   },
   categoriesRow: {
-    display: 'flex',
-    overflowX: 'auto' as const,
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
     gap: '16px',
-    paddingBottom: '8px'
   },
   catCard: {
-    minWidth: '110px',
-    padding: '20px 10px',
+    backgroundColor: '#ffffff',
+    borderRadius: '20px',
+    padding: '20px 12px',
     display: 'flex',
     flexDirection: 'column' as const,
     alignItems: 'center',
     gap: '10px',
     cursor: 'pointer',
-    transition: 'transform 0.2s ease'
+    border: '1px solid var(--border-subtle)',
+    transition: 'all 0.25s ease',
   },
   catIcon: {
-    fontSize: '36px'
+    fontSize: '2rem',
   },
   catName: {
-    fontSize: '14px',
-    fontWeight: 600
+    fontSize: '0.8rem',
+    fontWeight: 600,
+    color: 'var(--text-dark)',
   },
   collectionsGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-    gap: '20px'
+    gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+    gap: '20px',
   },
   colCard: {
-    padding: '24px',
+    backgroundColor: '#ffffff',
+    borderRadius: '24px',
+    padding: '28px',
+    border: '1px solid var(--border-subtle)',
     cursor: 'pointer',
-    transition: 'transform 0.2s ease, border-color 0.2s ease',
+    transition: 'all 0.3s ease',
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: '6px'
+    gap: '12px',
+  },
+  colHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  colBadge: {
+    fontSize: '0.65rem',
+    letterSpacing: '0.15em',
+    fontWeight: 700,
+    color: 'var(--text-muted)',
+  },
+  colTitle: {
+    fontSize: '1.4rem',
+    fontWeight: 700,
+    color: 'var(--text-dark)',
+  },
+  colDesc: {
+    fontSize: '0.85rem',
+    color: 'var(--text-muted)',
+    lineHeight: '1.5',
   },
   restaurantsGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(265px, 1fr))',
-    gap: '24px'
+    gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+    gap: '24px',
   },
   restCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: '24px',
     overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    transition: 'transform 0.2s ease'
+    border: '1px solid var(--border-subtle)',
+    boxShadow: '0 8px 20px rgba(0,0,0,0.03)',
+    transition: 'all 0.3s ease',
   },
   cardImageWrapper: {
-    height: '160px',
     position: 'relative' as const,
+    height: '180px',
     cursor: 'pointer',
-    overflow: 'hidden'
   },
   restImage: {
     width: '100%',
     height: '100%',
-    objectFit: 'cover' as const
+    objectFit: 'cover' as const,
   },
   cuisineBadge: {
     position: 'absolute' as const,
-    top: '12px',
-    left: '12px',
-    backgroundColor: 'rgba(5, 8, 22, 0.75)',
-    color: '#fff',
-    fontSize: '11px',
-    padding: '4px 8px',
-    borderRadius: '4px',
-    backdropFilter: 'blur(4px)'
-  },
-  logoBadge: {
-    position: 'absolute' as const,
     bottom: '12px',
+    left: '12px',
+    backgroundColor: 'rgba(23, 28, 24, 0.8)',
+    color: '#ffffff',
+    padding: '4px 10px',
+    borderRadius: '999px',
+    fontSize: '0.7rem',
+    fontWeight: 600,
+    backdropFilter: 'blur(4px)',
+  },
+  favBtn: {
+    position: 'absolute' as const,
+    top: '12px',
     right: '12px',
-    backgroundColor: 'var(--bg-secondary)',
-    borderRadius: '50%',
+    backgroundColor: '#ffffff',
+    border: 'none',
     width: '32px',
     height: '32px',
+    borderRadius: '50%',
+    cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '18px',
-    border: '1px solid var(--card-border)'
-  },
-  offerTag: {
-    position: 'absolute' as const,
-    bottom: '12px',
-    left: '12px',
-    backgroundColor: 'var(--accent)',
-    color: '#fff',
-    fontSize: '11px',
-    fontWeight: 600,
-    padding: '4px 8px',
-    borderRadius: '4px',
-    boxShadow: '0 0 10px var(--accent-glow)'
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
   },
   cardContent: {
-    padding: '16px',
+    padding: '20px',
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: '8px'
-  },
-  cardTitleRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    gap: '8px',
   },
   restName: {
-    fontSize: '16px',
-    fontWeight: 600,
-    cursor: 'pointer'
+    fontSize: '1.2rem',
+    fontWeight: 700,
+    color: 'var(--text-dark)',
+    cursor: 'pointer',
   },
-  favBtn: {
-    background: 'none',
-    border: 'none',
-    fontSize: '18px',
-    cursor: 'pointer'
+  ratingBadge: {
+    fontSize: '0.8rem',
+    fontWeight: 700,
+    backgroundColor: 'rgba(255, 94, 30, 0.1)',
+    color: 'var(--accent-orange)',
+    padding: '4px 8px',
+    borderRadius: '8px',
   },
-  restMeta: {
-    display: 'flex',
-    gap: '8px',
-    fontSize: '13px',
-    color: 'var(--text-secondary)'
+  restMetaText: {
+    fontSize: '0.8rem',
+    color: 'var(--text-muted)',
   },
-  rating: {
-    color: '#F59E0B',
-    fontWeight: 600
-  },
-  cardFooter: {
+  cardFooterRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    fontSize: '13px',
-    color: 'var(--text-muted)',
-    borderTop: '1px solid var(--card-border)',
-    paddingTop: '10px',
-    marginTop: '6px'
-  },
-  offerSlideWrapper: {
-    padding: '40px',
-    textAlign: 'center' as const,
-    display: 'flex',
-    flexDirection: 'column' as const,
     alignItems: 'center',
-    gap: '16px',
-    position: 'relative' as const
+    marginTop: '8px',
+    paddingTop: '10px',
+    borderTop: '1px solid var(--border-subtle)',
+    fontSize: '0.75rem',
   },
-  offerSlideContent: {
+  openTag: {
+    fontWeight: 600,
+    color: 'var(--text-dark)',
+  },
+  offerBadgeTag: {
+    color: 'var(--accent-orange)',
+    fontWeight: 700,
+  },
+  couponBanner: {
+    backgroundColor: '#ffffff',
+    borderRadius: '32px',
+    padding: '40px 48px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    border: '1px solid var(--border-subtle)',
+    boxShadow: 'var(--shadow-card)',
+  },
+  couponLeft: {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: '10px'
+    gap: '8px',
   },
-  offerBadge: {
-    alignSelf: 'center',
-    fontSize: '16px',
-    fontWeight: 700,
-    color: 'var(--accent)',
-    letterSpacing: '0.5px'
+  couponTitle: {
+    fontSize: '2.5rem',
+    fontWeight: 800,
+    color: 'var(--accent-orange)',
+    letterSpacing: '0.04em',
   },
-  carouselIndicators: {
+  couponDesc: {
+    fontSize: '1rem',
+    color: 'var(--text-dark)',
+    fontWeight: 600,
+  },
+  couponMin: {
+    fontSize: '0.8rem',
+    color: 'var(--text-muted)',
+  },
+  couponRight: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'flex-end',
+    gap: '20px',
+  },
+  indicatorGroup: {
     display: 'flex',
     gap: '8px',
-    marginTop: '12px'
+    alignItems: 'center',
   },
-  indicator: {
-    width: '8px',
+  dotIndicator: {
     height: '8px',
-    borderRadius: '50%',
-    backgroundColor: 'var(--card-border)',
-    border: 'none',
-    cursor: 'pointer'
-  },
-  indicatorActive: {
-    width: '24px',
-    height: '8px',
-    borderRadius: '4px',
-    backgroundColor: 'var(--accent)',
-    border: 'none',
+    borderRadius: '999px',
     cursor: 'pointer',
-    boxShadow: '0 0 5px var(--accent-glow)'
+    transition: 'all 0.3s ease',
   },
   trendingGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-    gap: '20px'
+    gap: '20px',
   },
   trendCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: '20px',
     padding: '20px',
+    border: '1px solid var(--border-subtle)',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     cursor: 'pointer',
-    transition: 'transform 0.2s ease'
+    transition: 'all 0.25s ease',
   },
-  trendMeta: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '4px'
+  trendFoodTitle: {
+    fontSize: '1.1rem',
+    fontWeight: 700,
+    color: 'var(--text-dark)',
+    marginTop: '4px',
   },
   trendPrice: {
+    fontSize: '0.9rem',
     fontWeight: 700,
-    color: 'var(--secondary)',
-    fontSize: '15px'
+    color: 'var(--accent-orange)',
+    marginTop: '2px',
   },
-  trendOrderBtn: {
-    padding: '8px 16px'
-  },
-  whyGrid: {
+  appBanner: {
+    backgroundColor: '#ffffff',
+    borderRadius: '32px',
+    padding: '48px',
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-    gap: '30px',
-    padding: '20px 0'
+    gridTemplateColumns: '1fr 1fr',
+    gap: '40px',
+    alignItems: 'center',
+    border: '1px solid var(--border-subtle)',
   },
-  whyCard: {
-    textAlign: 'center' as const,
+  appBannerLeft: {
     display: 'flex',
     flexDirection: 'column' as const,
-    alignItems: 'center',
-    gap: '12px'
+    gap: '12px',
   },
-  whyIcon: {
-    fontSize: '40px'
+  appBannerTitle: {
+    fontSize: '2.5rem',
+    fontWeight: 700,
+    color: 'var(--text-dark)',
   },
-  testimonialsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-    gap: '24px'
+  appBannerSub: {
+    fontSize: '0.95rem',
+    color: 'var(--text-muted)',
+    lineHeight: '1.6',
   },
-  testCard: {
-    padding: '24px',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '14px'
-  },
-  testHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px'
-  },
-  testAvatar: {
-    fontSize: '24px',
-    backgroundColor: 'rgba(255,255,255,0.03)',
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    border: '1px solid var(--card-border)'
-  },
-  ratingStars: {
-    color: '#F59E0B'
-  },
-  testComment: {
-    fontSize: '14px',
-    color: 'var(--text-secondary)',
-    lineHeight: '1.4',
-    fontStyle: 'italic'
-  },
-  downloadBanner: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '50px 40px',
-    gap: '30px'
-  },
-  downloadLeft: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '14px',
-    flex: 1
-  },
-  downloadApps: {
-    display: 'flex',
-    gap: '16px',
-    marginTop: '10px'
-  },
-  downloadBtn: {
-    padding: '12px 24px',
-    borderRadius: '8px',
-    backgroundColor: 'transparent',
-    border: '1px solid var(--card-border)',
-    color: 'var(--text-primary)',
-    fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'all 0.2s ease'
-  },
-  downloadRight: {
+  appBannerRight: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1
   },
-  phoneMock: {
-    fontSize: '120px'
-  }
+  burgerImg: {
+    maxWidth: '300px',
+    width: '100%',
+    height: 'auto',
+    filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.15))',
+  },
 };
-// Add CSS hover classes inside global stylesheet for catCard, colCard, restCard, trendCard, downloadBtn, heroBtn2:
-// `catCard:hover { transform: translateY(-4px); }`
-// `colCard:hover { transform: translateY(-4px); border-color: var(--accent); }`
-// `restCard:hover { transform: translateY(-4px); }`
-// `trendCard:hover { transform: translateY(-2px); }`
-// `downloadBtn:hover { border-color: var(--text-primary); }`
-// `heroBtn2:hover { border-color: var(--text-primary); color: var(--text-primary); }`
